@@ -98,10 +98,12 @@ var __lightPaint = (function(){
             pG = cG;
             pB = cB;
             
-            nR = Math.random() * 255 | 0;
-            nG = Math.random() * 255 | 0;
-            nB = Math.random() * 255 | 0;
+            nR = Math.random() * 254 | 0;
+            nG = Math.random() * 254 | 0;
+            nB = Math.random() * 254 | 0;
             
+            console.log(nR, nG, nB)
+
         }
 
 		window.requestAnimationFrame(draw);	
@@ -132,7 +134,7 @@ var __lightPaint = (function(){
 				ctx.fillRect(0,0,vidCnvs.width, vidCnvs.height);
 
 				//We use Uint16Array because it's waaayyyy faster than an ordinary array - which was the sole bottleneck in the original version
-				age = new Uint16Array(vidCnvs.width * vidCnvs.height);
+				age = new Uint32Array(vidCnvs.width * vidCnvs.height);
 
 				//Hide the video now, because if we try to access height/width values when display == block, it returns 0
 				video.style.display = "none";
