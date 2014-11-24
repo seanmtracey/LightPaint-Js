@@ -41,6 +41,8 @@ canvas{
 	padding: 0;
 	margin: 0;
 
+	/*Flip the image so it mirrors the users movements*/
+	
 	-moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
