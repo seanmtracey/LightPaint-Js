@@ -15,9 +15,7 @@ var __lightPaint = (function(){
 		dB = 0;
 
 	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-
-	window.audioContext = (window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext);
-	window.requestAnimationFrame = (window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame);
+	window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
 	var pR = 255, // Previous RGB values of the paint color
 		pG = 0,
@@ -37,18 +35,18 @@ var __lightPaint = (function(){
 
 		var d = vCtx.getImageData(0,0,vidCnvs.width,vidCnvs.height), // Canvas for drawing the video frame onto
 			p = ctx.getImageData(0,0,vidCnvs.width,vidCnvs.height), // The canvas we're painting to.
-			data = d.data,
 			h = 0,
 			i = 0,
 			j = 0,
 			k = 0,
 			aL = age.length,
+			dL = d.data.length,
+			tr = transition,
 			delta = performance.now() | 0; // The | 0 is a bitwise operation that rounds off the number
 
+		while(h < dL){
 
-		while(h < data.length){
-
-			if(data[h] > 240 && data[h + 1] > 240 && data[h + 2] > 240){
+			if(d.data[h] > whiteThreshold && d.data[h + 1] > whiteThreshold && d.data[h + 2] > whiteThreshold){
 				//It's white, so we'll switch these pixels out with the new color and give them an age
 				p.data[h] = cR;
 				p.data[h + 1] = cG;
@@ -58,7 +56,14 @@ var __lightPaint = (function(){
 
 			} else {
 				//Otherwise, like a red door, we want to... paint it black
-				data[h] = data[h + 1] = data[h + 2] = 0;
+				d.data[h] = d.data[h + 1] = d.data[h + 2] = 0;
+
+			}
+
+			//Check the age of the pixel, if it hasn't been painted for more than 5 seconds, we'll make it black
+			if(delta - age[i] > 5000){ 
+
+				p.data[h] = p.data[h + 1] = p.data[h + 2] = 0;
 
 			}
 
@@ -67,27 +72,11 @@ var __lightPaint = (function(){
 
 		}
 
-		while(j < aL){
-
-			//Check the age of the pixel, if it hasn't been painted for more than 5 seconds, we'll make it black
-			if(delta - age[j] > 5000){ 
-
-				p.data[k] = 0;
-				p.data[k + 1] = 0;
-				p.data[k + 2] = 0;
-
-			}
-		
-			j += 1;
-			k += 4;
-
-		}
-
 		ctx.putImageData(p,0,0); // Draw the newly painted pixels to the canvas
 
-		cR = pR + (0 - ((pR - nR) / 100) * transition) | 0; // Advance our RGB values part of the way to our next color
-        cG = pG + (0 - ((pG - nG) / 100) * transition) | 0;
-        cB = pB + (0 - ((pB - nB) / 100) * transition) | 0;
+		cR = pR + (0 - ((pR - nR) / 100) * tr) | 0; // Advance our RGB values part of the way to our next color
+        cG = pG + (0 - ((pG - nG) / 100) * tr) | 0;
+        cB = pB + (0 - ((pB - nB) / 100) * tr) | 0;
 
         transition += 0.5;
          
@@ -101,8 +90,6 @@ var __lightPaint = (function(){
             nR = Math.random() * 254 | 0;
             nG = Math.random() * 254 | 0;
             nB = Math.random() * 254 | 0;
-            
-            console.log(nR, nG, nB)
 
         }
 
@@ -133,10 +120,10 @@ var __lightPaint = (function(){
 
 				ctx.fillRect(0,0,vidCnvs.width, vidCnvs.height);
 
-				//We use Uint16Array because it's waaayyyy faster than an ordinary array - which was the sole bottleneck in the original version
+				//We use Uint32Array because it's waaayyyy faster than an ordinary array - which was the sole bottleneck in the original version
 				age = new Uint32Array(vidCnvs.width * vidCnvs.height);
 
-				//Hide the video now, because if we try to access height/width values when display == block, it returns 0
+				//Hide the video now, because if we try to access height/width values when display !== block, it returns 0
 				video.style.display = "none";
 				vidCnvs.style.display = "none";
 				document.getElementById('info').style.opacity = 0;

@@ -23,7 +23,7 @@ body{
 	background-attachment: scroll;
 	background-repeat: repeat-y;
 	width:100%;
-	height:auto;
+	height:100%;
 }
 
 body:-moz-full-screen{
