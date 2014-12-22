@@ -10,3 +10,4 @@ There's no object tracking in LightPaint. All that's going on is the webcam feed
 If a pixels hasn't been painted in over 5 seconds, it will turn black again.
 
 [Here](https://vine.co/v/OJlUAArpugO/), you can see the good people of HackPompey playing with a C++ version
+If you like, [here's a demo](http://sean.mtracey.org/stuff/lightpaint) :)
