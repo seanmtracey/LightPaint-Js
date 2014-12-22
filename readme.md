@@ -8,3 +8,5 @@ Pretty simple, just download the code and open index.html, hit the start button,
 There's no object tracking in LightPaint. All that's going on is the webcam feed is being drawn onto a canvas, then we work out where all of the white pixels are (the light source), color in those pixels with another color and then create a reference to them in another array which gives the pixel an age.
 
 If a pixels hasn't been painted in over 5 seconds, it will turn black again.
+
+[Here](https://vine.co/v/OJlUAArpugO/), you can see the good people of HackPompey playing with a C++ version
