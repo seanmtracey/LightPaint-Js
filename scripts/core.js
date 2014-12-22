@@ -121,9 +121,14 @@ var __lightPaint = (function(){
 					canvas.height = vidCnvs.height = video.offsetHeight;
 
 					ctx.fillRect(0,0,vidCnvs.width, vidCnvs.height);
-
+	
 					//We use Uint32Array because it's waaayyyy faster than an ordinary array - which was the sole bottleneck in the original version
 					age = new Uint32Array(vidCnvs.width * vidCnvs.height);
+
+					//Hide the video now, because if we try to access height/width values when display !== block, it returns 0
+					video.style.display = "none";
+					vidCnvs.style.display = "none";
+					document.getElementById('info').style.opacity = 0;
 
 					//Hide the video now, because if we try to access height/width values when display !== block, it returns 0
 					video.style.display = "none";
