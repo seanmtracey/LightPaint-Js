@@ -60,11 +60,13 @@ var __lightPaint = (function(){
 
 			}
 
-			//Check the age of the pixel, if it hasn't been painted for more than 5 seconds, we'll make it black
-			if(delta - age[i] > 5000){ 
-
-				p.data[h] = p.data[h + 1] = p.data[h + 2] = 0;
-
+			//Check the age of the pixel,
+			// if it hasn't been painted for more than 5 seconds,
+			// we'll fade it out
+			if(delta - age[i] > 5000){
+				p.data[h]--;
+				p.data[h + 1]--;
+				p.data[h + 2]--;
 			}
 
 			h += 4; // Iterate by 4 so we go to the next set of RGBA values
