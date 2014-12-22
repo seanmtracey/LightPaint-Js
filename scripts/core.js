@@ -109,11 +109,11 @@ var __lightPaint = (function(){
 					"video": {
 						optional: [
 							{minWidth: 320},
-							{minWidth: 640},
+							{minWidth: 640}/*,
 							{minWidth: 1024},
 							{minWidth: 1280},
 							{minWidth: 1920},
-							{minWidth: 2560},
+							{minWidth: 2560}*/
 						]
 					},
 					audio: false
