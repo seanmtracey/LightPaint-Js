@@ -23,7 +23,8 @@ body{
 	background-attachment: scroll;
 	background-repeat: repeat-y;
 	width:100%;
-	height:auto;
+	height:100%;
+	overflow: hidden;
 }
 
 body:-moz-full-screen{
@@ -66,7 +67,17 @@ video, #vidD{
 	margin-left: -250px;
 	color: rgba(255,255,255,0.3);
 	line-height: 1.4em;
+	margin-top: -50px;
 	-webkit-transition: opacity 0.8s;
 	transition: opacity 0.8s;
+}
 
+#start{
+	margin-top: 12px;
+	background-color: white;
+	border: 0px none;
+	border-radius: 30px;
+	padding: 10px 45px;
+	cursor: pointer;
+	font-weight: 800;
 }
