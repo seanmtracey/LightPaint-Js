@@ -60,11 +60,13 @@ var __lightPaint = (function(){
 
 			}
 
-			//Check the age of the pixel, if it hasn't been painted for more than 5 seconds, we'll make it black
-			if(delta - age[i] > 5000){ 
-
-				p.data[h] = p.data[h + 1] = p.data[h + 2] = 0;
-
+			//Check the age of the pixel,
+			// if it hasn't been painted for more than 5 seconds,
+			// we'll fade it out
+			if(delta - age[i] > 5000){
+				p.data[h]--;
+				p.data[h + 1]--;
+				p.data[h + 2]--;
 			}
 
 			h += 4; // Iterate by 4 so we go to the next set of RGBA values
@@ -100,52 +102,70 @@ var __lightPaint = (function(){
 	function init(){
 		console.log("Initialised");
 
-		navigator.getUserMedia (
-	      {
-	         video: true,
-	         audio: false
-	      },
-	      function(localMediaStream) {
-	         
-	         video.src = window.URL.createObjectURL(localMediaStream);
-	         video.play();
+		document.getElementById('start').addEventListener('click', function(){
 
-	         console.log(video);
+			navigator.getUserMedia (
+				{
+					"video": {
+						optional: [
+							{minWidth: 320},
+							{minWidth: 640}/*,
+							{minWidth: 1024},
+							{minWidth: 1280},
+							{minWidth: 1920},
+							{minWidth: 2560}*/
+						]
+					},
+					audio: false
+				},
+				function(localMediaStream) {
+				 
+				 video.src = window.URL.createObjectURL(localMediaStream);
+				 video.play();
 
-	         //It's in a setTimeout because FF has issues with getUserMedia events firing... :(
-	         setTimeout(function(){
+				 console.log(video);
 
-				canvas.width = vidCnvs.width = video.offsetWidth;
-				canvas.height = vidCnvs.height = video.offsetHeight;
+				 //It's in a setTimeout because FF has issues with getUserMedia events firing... :(
+				 setTimeout(function(){
 
-				ctx.fillRect(0,0,vidCnvs.width, vidCnvs.height);
+					canvas.width = vidCnvs.width = video.offsetWidth;
+					canvas.height = vidCnvs.height = video.offsetHeight;
 
-				//We use Uint32Array because it's waaayyyy faster than an ordinary array - which was the sole bottleneck in the original version
-				age = new Uint32Array(vidCnvs.width * vidCnvs.height);
+					ctx.fillRect(0,0,vidCnvs.width, vidCnvs.height);
+	
+					//We use Uint32Array because it's waaayyyy faster than an ordinary array - which was the sole bottleneck in the original version
+					age = new Uint32Array(vidCnvs.width * vidCnvs.height);
 
-				//Hide the video now, because if we try to access height/width values when display !== block, it returns 0
-				video.style.display = "none";
-				vidCnvs.style.display = "none";
-				document.getElementById('info').style.opacity = 0;
+					//Hide the video now, because if we try to access height/width values when display !== block, it returns 0
+					video.style.display = "none";
+					vidCnvs.style.display = "none";
+					document.getElementById('info').style.opacity = 0;
 
-				//Fill our age array with values to start off with
-				for(var f = 0; f < vidCnvs.width * vidCnvs.height; f += 1){
+					//Hide the video now, because if we try to access height/width values when display !== block, it returns 0
+					video.style.display = "none";
+					vidCnvs.style.display = "none";
+					document.getElementById('info').style.opacity = 0;
 
-					age[f] = 0;
+					//Fill our age array with values to start off with
+					for(var f = 0; f < vidCnvs.width * vidCnvs.height; f += 1){
 
+						age[f] = 0;
+
+					}
+
+					draw();
+
+				 }, 1000);
+
+				},
+
+				// errorCallback
+				function(err) {
+				 console.log("The following error occured: " + err);
 				}
-
-				draw();
-
-	         }, 1000);
-
-	      },
-
-	      // errorCallback
-	      function(err) {
-	         console.log("The following error occured: " + err);
-	      }
-	   );
+				);
+			
+		}, false);
 
 		window.addEventListener('keypress', function(key){
 
